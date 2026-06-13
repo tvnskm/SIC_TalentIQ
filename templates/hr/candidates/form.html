@@ -1,0 +1,30 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">Edit Candidate: {{ object.name }}</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label text-capitalize">{{ field.name }}</label>
+            <input type="{% if field.name == 'email' %}email{% elif field.name == 'experience_years' %}number{% else %}text{% endif %}" 
+                   name="{{ field.html_name }}" 
+                   value="{{ field.value|default_if_none:'' }}" 
+                   class="form-control" 
+                   {% if field.name == 'experience_years' %}step="0.1"{% endif %}>
+            {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+          </div>
+          {% endfor %}
+          <div class="mt-4">
+            <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Changes</button>
+            <a href="{% url 'candidates:detail' object.pk %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

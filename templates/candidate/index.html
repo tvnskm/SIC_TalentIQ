@@ -1,0 +1,9 @@
+{% extends "candidate/base.html" %}
+{% block content %}
+<div class="card shadow-sm mx-auto mt-5" style="max-width: 500px;"><div class="card-header bg-primary text-white">Upload Resume for Analysis</div><div class="card-body">
+  <form method="post" action="{% url 'portal:upload' %}" enctype="multipart/form-data">{% csrf_token %}
+    <input type="file" name="resume_file" class="form-control mb-3" required>
+    <button type="submit" class="btn btn-primary w-100">Analyze My Resume</button>
+  </form>
+</div></div>
+{% endblock %}

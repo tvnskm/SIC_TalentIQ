@@ -1,0 +1,38 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Job Postings{% endblock %}
+{% block content %}
+<div class="glass-card hover-elevate">
+    <div class="card-header d-flex justify-content-between align-items-center py-3">
+        <span class="fs-5 fw-semibold"><i class="bi bi-briefcase text-primary me-2"></i> All Jobs</span>
+        <div>
+            <a href="{% url 'jobs:upload' %}" class="btn btn-outline-premium me-2"><i class="bi bi-file-earmark-text me-1"></i> Upload JD</a>
+            <a href="{% url 'jobs:add' %}" class="btn btn-premium"><i class="bi bi-plus-lg me-1"></i> Create Job</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-borderless mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Job Title</th>
+                    <th>Min Experience</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in jobs %}
+                <tr>
+                    <td class="ps-4 fw-semibold text-primary"><a href="{% url 'jobs:detail' j.pk %}" class="text-decoration-none">{{ j.title }}</a></td>
+                    <td class="text-secondary">{{ j.min_experience }} Years</td>
+                    <td class="text-end pe-4">
+                        <a href="{% url 'matching:run' j.pk %}" class="btn btn-sm btn-outline-warning me-2"><i class="bi bi-cpu-fill me-1"></i> Run Engine</a> 
+                        <a href="{% url 'matching:results' j.pk %}" class="btn btn-sm btn-outline-premium"><i class="bi bi-bar-chart-line me-1"></i> Rankings</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center py-5 text-secondary">No job postings found. Create one to get started.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Upload Resume{% endblock %}
+{% block content %}
+<div class="glass-card hover-elevate mx-auto" style="max-width: 600px;">
+  <div class="card-header py-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent);">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-cloud-arrow-up text-primary me-2"></i> Upload Single Resume</h4>
+  </div>
+  <div class="card-body p-4">
+    <form method="post" action="{% url 'resumes:upload' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label class="form-label text-secondary text-uppercase fw-semibold" style="font-size: 0.8rem; letter-spacing: 0.05em;">Select Document (.pdf, .docx, .txt)</label>
+        <div class="position-relative">
+            <input type="file" name="resume_file" class="form-control form-control-lg" required accept=".pdf,.docx,.txt" style="padding-top: 1rem; padding-bottom: 1rem;">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-premium w-100 py-3 fs-6"><i class="bi bi-magic me-2"></i> Extract Data & Create Profile</button>
+    </form>
+    
+    <div class="d-flex align-items-center my-4">
+        <hr class="flex-grow-1" style="border-color: var(--border-color);">
+        <span class="px-3 text-secondary text-uppercase" style="font-size: 0.8rem;">or</span>
+        <hr class="flex-grow-1" style="border-color: var(--border-color);">
+    </div>
+    
+    <a href="{% url 'resumes:bulk_upload' %}" class="btn btn-outline-premium w-100 py-3"><i class="bi bi-stack me-2"></i> Switch to Bulk Upload (CSV/Multiple)</a>
+  </div>
+</div>
+{% endblock %}

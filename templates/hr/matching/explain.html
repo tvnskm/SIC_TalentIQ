@@ -1,0 +1,8 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-header">Score Breakdown: {{ candidate.name }} vs {{ job.title }}</div><div class="card-body">
+  <h4>Overall: <span class="badge bg-primary">{{ match.match_percentage }}%</span></h4>
+  <p>Skill: {{ match.skill_score|floatformat:1 }}% | Exp: {{ match.experience_score|floatformat:1 }}% | Cert: {{ match.certification_score|floatformat:1 }}%</p>
+  <table class="table mt-3"><thead><tr><th>Skill</th><th>Matched?</th></tr></thead><tbody>{% for s in skill_breakdown %}<tr><td>{{ s.skill }}</td><td>{% if s.matched %}Yes{% else %}No{% endif %}</td></tr>{% endfor %}</tbody></table>
+</div></div>
+{% endblock %}

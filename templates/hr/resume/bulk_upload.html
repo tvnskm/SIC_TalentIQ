@@ -1,0 +1,20 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 600px;">
+  <div class="card-header bg-dark text-white"><i class="bi bi-stack"></i> Bulk Resume Upload</div>
+  <div class="card-body">
+    <p class="text-muted">Select multiple resume files (PDF, DOCX, TXT) at once. The engine will parse all of them, extract skills and experience, and instantly create candidate profiles for you.</p>
+    <form method="post" action="{% url 'resumes:bulk_upload' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Select Multiple Files</label>
+        <input type="file" name="resumes" class="form-control" multiple required accept=".pdf,.docx,.txt">
+      </div>
+      <button type="submit" class="btn btn-dark w-100">Parse All & Import</button>
+    </form>
+    <div class="mt-3 text-center">
+      <a href="{% url 'resumes:upload' %}" class="text-decoration-none">Back to Single Upload</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

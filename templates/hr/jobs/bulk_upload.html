@@ -1,0 +1,29 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-success text-white">Import Candidates for "{{ job.title }}"</div>
+      <div class="card-body">
+        <p class="text-muted mb-4">Upload a CSV file containing candidates. They will be added to the global database AND automatically assigned to this job.</p>
+        
+        <form method="post" enctype="multipart/form-data" class="mb-4">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Select CSV File</label>
+            <input class="form-control" type="file" name="csv_file" accept=".csv" required>
+            <div class="form-text">File must contain columns: Name, Email, Phone, Education, Experience, Skills (comma separated), Certifications (comma separated)</div>
+          </div>
+          <button type="submit" class="btn btn-success"><i class="bi bi-upload"></i> Upload & Assign</button>
+          <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+
+        <div class="alert alert-info border-info">
+          <h6 class="alert-heading"><i class="bi bi-info-circle"></i> CSV Format Rules</h6>
+          <p class="mb-0 small">The system expects columns in this exact order. Do not skip columns. If a candidate already exists in the system (by email), they won't be duplicated, but they will be assigned to this job.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

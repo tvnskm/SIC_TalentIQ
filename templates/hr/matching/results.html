@@ -1,0 +1,43 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Candidate Rankings{% endblock %}
+{% block content %}
+<div class="glass-card hover-elevate">
+    <div class="card-header d-flex justify-content-between align-items-center py-3">
+        <span class="fs-5 fw-semibold"><i class="bi bi-trophy text-warning me-2"></i> Rankings for {{ job.title }}</span>
+        <a href="{% url 'analytics:job_dashboard' job.pk %}" class="btn btn-premium"><i class="bi bi-bar-chart-line-fill me-1"></i> Interactive Analytics</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-borderless mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4" style="width: 10%;">Rank</th>
+                    <th>Candidate</th>
+                    <th style="width: 30%;">Match Score</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in matches %}
+                <tr class="{% if m.rank == 1 %}bg-warning bg-opacity-10 border-start border-4 border-warning{% endif %}">
+                    <td class="ps-4 fw-bold {% if m.rank <= 3 %}text-warning{% else %}text-secondary{% endif %}">#{{ m.rank }}</td>
+                    <td class="fw-semibold text-primary"><a href="{% url 'candidates:detail' m.candidate.pk %}" class="text-decoration-none">{{ m.candidate.name }}</a></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3 fw-bold {% if m.match_percentage >= 70 %}text-success{% elif m.match_percentage >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ m.match_percentage }}%</span>
+                            <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255,255,255,0.05);">
+                                <div class="progress-bar {% if m.match_percentage >= 70 %}bg-success{% elif m.match_percentage >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ m.match_percentage }}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-end pe-4">
+                        <a href="{% url 'matching:explain' job.pk m.candidate.pk %}" class="btn btn-sm btn-outline-premium px-3"><i class="bi bi-robot me-1"></i> AI Explanation</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center py-5 text-secondary">No candidates have been ranked for this job yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

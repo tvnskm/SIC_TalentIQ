@@ -1,0 +1,49 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-7">
+    <div class="card shadow-sm mx-auto">
+      <div class="card-header bg-primary text-white">Review & Confirm Job Description</div>
+      <div class="card-body">
+        <form method="post" action="{% url 'jobs:upload_confirm' %}">{% csrf_token %}
+          <div class="mb-3"><label>Job Title</label><input type="text" name="title" class="form-control" value="{{ extracted.title }}" required></div>
+          <div class="mb-3"><label>Min Experience (years)</label><input type="number" name="min_experience" class="form-control" step="0.5" value="{{ extracted.min_experience }}" required></div>
+          <div class="mb-3"><label>Description</label><textarea name="description" class="form-control" rows="5">{{ extracted.description }}</textarea></div>
+          <div class="mb-3"><label class="form-label">Required Skills & Weights (1.0 = normal, 2.0 = critical)</label>
+            <div class="row g-2">
+            {% for skill, category in all_skills.items %}
+            <div class="col-md-4">
+              <div class="input-group input-group-sm">
+                <div class="input-group-text"><input type="checkbox" name="required_skills" value="{{ skill }}" {% if skill in extracted.skills %}checked{% endif %}></div>
+                <span class="form-control">{{ skill }}</span>
+                <input type="number" name="weight_{{ skill }}" class="form-control" value="1.0" step="0.5">
+              </div>
+            </div>
+            {% endfor %}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success">Save Job</button>
+          <a href="{% url 'jobs:upload' %}" class="btn btn-outline-danger">Discard</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="card shadow-sm">
+      <div class="card-header">AI Extracted Summary</div>
+      <div class="card-body">
+        <p><strong>Title found:</strong> {{ extracted.title }}</p>
+        <p><strong>Min Experience:</strong> {{ extracted.min_experience }} years</p>
+        <p><strong>Detected Skills:</strong></p>
+        <ul>
+          {% for s in extracted.skills %}
+          <li>{{ s }}</li>
+          {% empty %}
+          <li>None detected.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

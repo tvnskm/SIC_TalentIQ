@@ -1,0 +1,7 @@
+{% extends "candidate/base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4"><div class="card shadow-sm text-center py-5"><h3>Resume Score</h3><h1 class="text-primary">{{ session.resume_score }}</h1></div></div>
+  <div class="col-md-8"><div class="card shadow-sm"><div class="card-header">Detected Skills</div><div class="card-body">{% for s in session.extracted_skills %}<span class="badge bg-info text-dark m-1 fs-6">{{ s }}</span>{% endfor %}</div></div></div>
+</div>
+{% endblock %}

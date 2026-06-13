@@ -1,0 +1,39 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Job Details{% endblock %}
+{% block content %}
+<div class="glass-card hover-elevate mb-4">
+    <div class="card-header py-4 px-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent);">
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-primary bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                <i class="bi bi-briefcase fs-4 text-primary"></i>
+            </div>
+            <h3 class="mb-0 fw-bold">{{ job.title }}</h3>
+        </div>
+        <span class="badge badge-soft-primary px-3 py-2 fs-6 rounded-pill"><i class="bi bi-people-fill me-1"></i> {{ job.candidates.count }} Assigned</span>
+    </div>
+    <div class="card-body p-4">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <p class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.8rem; letter-spacing: 0.05em;">Min Experience</p>
+                <p class="fs-5 text-dark fw-medium">{{ job.min_experience }} Years</p>
+            </div>
+            <div class="col-md-9">
+                <p class="text-secondary text-uppercase fw-semibold mb-1" style="font-size: 0.8rem; letter-spacing: 0.05em;">Description</p>
+                <p class="text-dark">{{ job.description|default:"No description provided." }}</p>
+            </div>
+        </div>
+        
+        <hr class="my-4" style="border-color: var(--border-color);">
+        
+        <div class="d-flex flex-wrap gap-3">
+            <a href="{% url 'jobs:assign' job.pk %}" class="btn btn-outline-premium"><i class="bi bi-person-plus-fill me-2"></i> Assign Candidates</a>
+            <a href="{% url 'jobs:bulk_upload' job.pk %}" class="btn btn-outline-success"><i class="bi bi-upload me-2"></i> Import CSV for Job</a>
+            <a href="{% url 'analytics:job_dashboard' job.pk %}" class="btn btn-outline-primary"><i class="bi bi-pie-chart-fill me-2"></i> Job Analytics</a>
+            <div class="ms-auto d-flex gap-2">
+                <a href="{% url 'matching:run' job.pk %}" class="btn btn-premium" style="background: linear-gradient(135deg, var(--color-warning), #d97706);"><i class="bi bi-cpu-fill me-2"></i> Run Match Engine</a>
+                <a href="{% url 'matching:results' job.pk %}" class="btn btn-premium"><i class="bi bi-list-ol me-2"></i> View Rankings</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

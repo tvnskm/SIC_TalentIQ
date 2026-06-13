@@ -1,0 +1,75 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Candidate Profile{% endblock %}
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="glass-card hover-elevate">
+            <div class="card-body p-4 d-flex justify-content-between align-items-start" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);">
+                <div>
+                    <h3 class="fw-bold mb-2 text-dark">{{ candidate.name }}</h3>
+                    <p class="text-secondary mb-4"><i class="bi bi-envelope text-primary me-2"></i> {{ candidate.email }} <span class="mx-2">|</span> <i class="bi bi-telephone text-primary me-2"></i> {{ candidate.phone }}</p>
+                    <div class="d-flex gap-4">
+                        <div>
+                            <span class="text-secondary text-uppercase fw-semibold d-block mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Education</span>
+                            <span class="text-dark">{{ candidate.education|default:"Not specified" }}</span>
+                        </div>
+                        <div>
+                            <span class="text-secondary text-uppercase fw-semibold d-block mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Experience</span>
+                            <span class="text-dark fw-medium">{{ candidate.experience_years }} Years</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'candidates:edit' candidate.pk %}" class="btn btn-outline-premium"><i class="bi bi-pencil me-2"></i> Edit Profile</a>
+                    <a href="{% url 'candidates:delete' candidate.pk %}" class="btn btn-outline-danger"><i class="bi bi-trash me-2"></i> Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="glass-card h-100 hover-elevate">
+            <div class="card-header py-3"><i class="bi bi-tools text-primary me-2"></i> Extracted Skills</div>
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover mb-0 align-middle">
+                    <tbody>
+                        {% for cs in skills %}
+                        <tr>
+                            <td class="ps-4"><span class="badge badge-soft-primary px-3 py-2" style="font-size: 0.85rem;">{{ cs.skill.skill_name }}</span></td>
+                            <td class="text-secondary text-end pe-4">{{ cs.proficiency_level|title }} Level</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-center py-4 text-secondary">No skills extracted.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="glass-card h-100 hover-elevate">
+            <div class="card-header py-3"><i class="bi bi-lightning-charge text-warning me-2"></i> Job Match History</div>
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover mb-0 align-middle">
+                    <tbody>
+                        {% for m in matches %}
+                        <tr class="{% if m.match_percentage >= 70 %}bg-success bg-opacity-10 border-start border-4 border-success{% endif %}">
+                            <td class="ps-4 fw-medium text-dark">{{ m.job.title }}</td>
+                            <td class="fw-bold {% if m.match_percentage >= 70 %}text-success{% elif m.match_percentage >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ m.match_percentage }}% Match</td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'matching:explain' m.job.pk candidate.pk %}" class="btn btn-sm btn-outline-premium px-3">AI Explanation</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center py-4 text-secondary">No matches run yet for this candidate.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

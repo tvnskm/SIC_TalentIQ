@@ -1,0 +1,31 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white"><i class="bi bi-file-earmark-spreadsheet"></i> Bulk Import Candidates (CSV)</div>
+      <div class="card-body">
+        <p class="text-muted">Upload a CSV file to ingest hundreds of candidates instantly. The system will skip any emails that already exist.</p>
+        
+        <div class="alert alert-info py-2 mb-4">
+          <strong>Required CSV Format (Include Header Row):</strong>
+          <br>
+          <code class="text-dark">Name, Email, Phone, Education, Experience, Skills</code>
+          <hr class="my-2">
+          <small>Example Row:<br>
+          <code class="text-dark">John Doe, john@example.com, 555-0100, B.S. Computer Science, 4.5, "Python, SQL, AWS, React"</code></small>
+        </div>
+
+        <form method="post" action="{% url 'candidates:bulk_upload' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Select CSV File</label>
+            <input type="file" name="csv_file" class="form-control" required accept=".csv">
+          </div>
+          <button type="submit" class="btn btn-success w-100">Start Bulk Import</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

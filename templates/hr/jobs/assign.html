@@ -1,0 +1,71 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Assign Candidates to "{{ job.title }}"</h3>
+    <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-outline-secondary">Cancel</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-people-fill"></i> Select Candidates
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <span class="text-muted">Select the candidates you want the AI Matching Engine to rank for this specific job role.</span>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="selectAllBtn">Select All</button>
+            </div>
+            
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th style="width: 50px;">Assign</th>
+                            <th>Candidate Name</th>
+                            <th>Email</th>
+                            <th>Experience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in all_candidates %}
+                        <tr>
+                            <td>
+                                <input class="form-check-input candidate-checkbox" type="checkbox" name="candidate_ids" value="{{ c.id }}" {% if c.id in assigned_ids %}checked{% endif %} style="transform: scale(1.5);">
+                            </td>
+                            <td><strong>{{ c.name }}</strong></td>
+                            <td>{{ c.email }}</td>
+                            <td>{{ c.experience_years }} yrs</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">No candidates exist in the system yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success px-5 shadow-sm"><i class="bi bi-save"></i> Save Assignments</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const checkboxes = document.querySelectorAll('.candidate-checkbox');
+        
+        let allSelected = false;
+        
+        selectAllBtn.addEventListener('click', function() {
+            allSelected = !allSelected;
+            checkboxes.forEach(cb => cb.checked = allSelected);
+            selectAllBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+        });
+    });
+</script>
+{% endblock %}

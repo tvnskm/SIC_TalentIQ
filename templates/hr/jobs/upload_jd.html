@@ -1,0 +1,17 @@
+{% extends "hr/base.html" %}
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 600px;">
+  <div class="card-header bg-primary text-white"><i class="bi bi-file-earmark-text"></i> Upload Job Description</div>
+  <div class="card-body">
+    <p class="text-muted">Upload a PDF, DOCX, or TXT file containing a job description. We will automatically extract the requirements, skills, and min experience.</p>
+    <form method="post" action="{% url 'jobs:upload' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Select File (.pdf, .docx, .txt)</label>
+        <input type="file" name="jd_file" class="form-control" required accept=".pdf,.docx,.txt">
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Upload & Analyze JD</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

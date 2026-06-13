@@ -1,0 +1,67 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Job Analytics{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold m-0"><i class="bi bi-graph-up-arrow text-primary me-2"></i> {{ job.title }} Analytics</h3>
+    <a href="{% url 'matching:results' job.pk %}" class="btn btn-outline-premium">
+        <i class="bi bi-arrow-left me-2"></i> Back to Rankings
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-12">
+        <div class="glass-card hover-elevate border-0">
+            <div class="card-body p-4">
+                <h5 class="text-secondary fw-semibold mb-4 text-uppercase" style="letter-spacing: 0.05em; font-size: 0.85rem;">Top Skills Demanded vs Available</h5>
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ chart_skills }}" class="img-fluid rounded shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="glass-card hover-elevate border-0 h-100">
+            <div class="card-body p-4 d-flex flex-column align-items-center">
+                <h5 class="text-secondary fw-semibold mb-4 text-uppercase w-100" style="letter-spacing: 0.05em; font-size: 0.85rem;">Match Score Distribution</h5>
+                <div class="text-center mb-4">
+                    <img src="data:image/png;base64,{{ chart_match }}" class="img-fluid rounded shadow-sm" style="max-height: 250px;">
+                </div>
+                
+                <div class="mt-auto p-4 rounded bg-white shadow-sm w-100 border">
+                    <strong class="text-primary"><i class="bi bi-info-circle me-2"></i> How is the Match Score calculated?</strong>
+                    <span class="d-block mt-2 text-secondary small">The AI-driven percentage evaluates three key areas:</span>
+                    <ul class="mb-0 mt-2 ps-3 text-secondary small">
+                        <li class="mb-1"><strong class="text-dark">Skill Alignment:</strong> Evaluates extracted skills against job requirements.</li>
+                        <li class="mb-1"><strong class="text-dark">Experience Fit:</strong> Compares total years against the minimum required.</li>
+                        <li><strong class="text-dark">Certifications:</strong> Adds bonus points for recognized credentials.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="glass-card hover-elevate border-0 h-100">
+            <div class="card-body p-4 d-flex flex-column align-items-center">
+                <h5 class="text-secondary fw-semibold mb-4 text-uppercase w-100" style="letter-spacing: 0.05em; font-size: 0.85rem;">Applicant Experience Levels</h5>
+                <div class="text-center mb-4">
+                    <img src="data:image/png;base64,{{ chart_exp }}" class="img-fluid rounded shadow-sm" style="max-height: 250px;">
+                </div>
+                
+                <div class="mt-auto p-4 rounded bg-white shadow-sm w-100 border">
+                    <strong class="text-primary"><i class="bi bi-info-circle me-2"></i> How is Experience extracted?</strong>
+                    <span class="d-block mt-2 text-secondary small">This chart visualizes the distribution of total experience among candidates:</span>
+                    <ul class="mb-0 mt-2 ps-3 text-secondary small">
+                        <li class="mb-1"><strong class="text-dark">Extraction:</strong> AI scans the resume for experience patterns.</li>
+                        <li class="mb-1"><strong class="text-dark">Bucketing:</strong> Candidates are grouped into distinct brackets.</li>
+                        <li><strong class="text-dark">Impact:</strong> Meeting the requirement gives full experience points.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

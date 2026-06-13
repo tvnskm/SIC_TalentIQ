@@ -1,0 +1,99 @@
+{% extends "hr/base.html" %}
+{% block page_title %}Algorithm Simulator{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="glass-card hover-elevate h-100">
+      <div class="card-header py-3">
+        <i class="bi bi-sliders text-warning me-2"></i> <span class="fw-bold">Weight Controls</span>
+      </div>
+      <div class="card-body p-4">
+        <div class="mb-4">
+            <label class="form-label text-uppercase text-secondary fw-semibold mb-2" style="font-size: 0.75rem;">Target Job Role</label>
+            <select id="sim-job" class="form-select py-2">
+                {% for j in jobs %}
+                <option value="{{ j.pk }}">{{ j.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <div class="d-flex justify-content-between">
+                <label class="form-label text-uppercase text-secondary fw-semibold" style="font-size: 0.75rem;">Experience Weight</label>
+                <span class="text-warning fw-bold text-xs" id="exp-val">20%</span>
+            </div>
+            <input type="range" id="exp-weight" value="20" class="form-range" oninput="document.getElementById('exp-val').innerText = this.value + '%'">
+        </div>
+        
+        <div class="mb-4">
+            <div class="d-flex justify-content-between">
+                <label class="form-label text-uppercase text-secondary fw-semibold" style="font-size: 0.75rem;">Certification Weight</label>
+                <span class="text-primary fw-bold text-xs" id="cert-val">10%</span>
+            </div>
+            <input type="range" id="cert-weight" value="10" class="form-range" oninput="document.getElementById('cert-val').innerText = this.value + '%'">
+        </div>
+        
+        <button class="btn btn-premium w-100 py-3 mt-2" onclick="runSimulation()"><i class="bi bi-cpu me-2"></i> Recalculate (In-Memory)</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8">
+    <div class="glass-card h-100">
+      <div class="card-header py-3">
+        <i class="bi bi-broadcast text-success me-2"></i> <span class="fw-bold">Live Rankings Stream</span>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-borderless table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4" style="width: 15%;">Rank</th>
+                    <th>Candidate Name</th>
+                    <th class="text-end pe-4" style="width: 25%;">Total Score</th>
+                </tr>
+            </thead>
+            <tbody id="sim-results">
+                <tr><td colspan="3" class="text-center py-5 text-secondary">Select weights and click recalculate to view live rankings.</td></tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+async function runSimulation() {
+  const tbody = document.getElementById('sim-results');
+  tbody.innerHTML = '<tr><td colspan="3" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></td></tr>';
+  
+  const jobId = document.getElementById('sim-job').value;
+  const expW = document.getElementById('exp-weight').value / 100;
+  const certW = document.getElementById('cert-weight').value / 100;
+  
+  try {
+      const res = await fetch('/api/simulator/recalculate/', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({job_id: jobId, exp_weight: expW, cert_weight: certW})
+      });
+      const data = await res.json();
+      
+      if (data.rankings.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" class="text-center py-5 text-secondary">No candidates found for this role.</td></tr>';
+          return;
+      }
+      
+      const html = data.rankings.map(r => `
+        <tr class="animate-fade-up">
+            <td class="ps-4 fw-bold text-warning">#${r.rank}</td>
+            <td class="fw-semibold text-dark">${r.candidate_name}</td>
+            <td class="text-end pe-4 fw-bold text-success">${r.total_score}%</td>
+        </tr>
+      `).join('');
+      tbody.innerHTML = html;
+  } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-center py-5 text-danger">Simulation failed. Check console.</td></tr>';
+  }
+}
+</script>
+{% endblock %}
